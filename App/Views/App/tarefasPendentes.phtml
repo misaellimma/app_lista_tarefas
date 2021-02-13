@@ -1,0 +1,89 @@
+<script>
+	function remover(id){
+		location.href = '/tarefas_pendentes?acao=remover&id=' + id;
+	}
+
+	function editar(id, tarefa){
+		//criar um form de edição
+		let form = document.createElement('form')
+		form.action = 'tarefa_controller.php?acao=atualizar&pagina=index'
+		form.method = 'post'
+		form.className = 'row'
+
+		//criar um input para entrada do texto
+		let inputTarefa = document.createElement('input')
+		inputTarefa.type = 'text'
+		inputTarefa.name = 'tarefa'
+		inputTarefa.className = 'col-md-9 form-control'
+		inputTarefa.value = txt_tarefa
+
+		//criar um input para entrada de texto
+		let inputId = document.createElement('input')
+		inputId.type = 'hidden'
+		inputId.name = 'id'
+		inputId.value = id
+
+		//criar um button
+		let button = document.createElement('button')
+		button.type = 'submit'
+		button.className = 'col-md-3 btn btn-info '
+		button.innerHTML = 'Atualizar'
+
+		//incluir o input no form
+		form.appendChild(inputTarefa)
+
+		//incluir o input no form
+		form.appendChild(inputId)
+
+		//incluir button no form
+		form.appendChild(button)
+
+		//selecionar a div tarefa
+		let tarefa = document.getElementById('tarefa_' + id)
+
+		//limpar o texto da tarefa
+		tarefa.innerHTML= ''
+
+		//incluir form na pagina
+		tarefa.insertBefore(form, tarefa[0])
+	}
+
+	function marcarRealizado(id){
+		location.href = '/tarefas_pendentes?acao=marcarRealizado&id=' + id;	
+	}
+</script>
+<div class="container app">
+	<div class="row">
+		<div class="col-md-3 menu">
+			<ul class="list-group">
+				<li class="list-group-item active"><a href="/tarefas_pendentes">Tarefas pendentes</a></li>
+				<li class="list-group-item"><a href="/nova_tarefa">Nova tarefa</a></li>
+				<li class="list-group-item"><a href="/todas_tarefas">Todas tarefas</a></li>
+			</ul>
+		</div>
+
+		<div class="col-md-9">
+			<div class="container pagina">
+				<div class="row">
+					<div class="col">
+						<h4>Tarefas pendentes</h4>
+						<hr />
+						<? foreach($this->view->tarefas as $indice => $tarefa){ ?>
+							<div class="row mb-3 d-flex align-items-center tarefa">
+								<div class="col-sm-9" id="tarefa_<?=$tarefa['id']?>">
+									<?=$tarefa['tarefa']?>
+								</div>
+								<div class="col-sm-3 mt-2 d-flex justify-content-between">
+									<i class="fas fa-trash-alt fa-lg text-danger" onclick="remover(<?=$tarefa['id']?>)"></i>
+									<i class="fas fa-edit fa-lg text-info" onclick="editar(<?=$tarefa['id']?>,'<?=$tarefa['tarefa']?>')"></i>
+									<i class="fas fa-check-square fa-lg text-success" onclick="marcarRealizado(<?=$tarefa['id']?>)"></i>
+								</div>
+							</div>
+						<? } ?>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+		
